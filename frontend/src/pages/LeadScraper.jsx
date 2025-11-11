@@ -18,7 +18,10 @@ const LeadScraper = () => {
     has_website: false,
     has_email: false,
     min_reviews: '',
+    data_sources: ['Google Maps'],
   });
+
+  const availableSources = ['Google Maps', 'Yelp', 'Facebook Pages', 'Trustpilot'];
   const [currentJob, setCurrentJob] = useState(null);
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(false);
