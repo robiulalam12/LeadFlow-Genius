@@ -67,6 +67,7 @@ const LeadScraper = () => {
         has_website: formData.has_website || null,
         has_email: formData.has_email || null,
         min_reviews: formData.min_reviews ? parseInt(formData.min_reviews) : null,
+        data_sources: formData.data_sources,
       });
 
       setCurrentJob({ id: response.data.job_id, status: 'running', progress: 0 });
