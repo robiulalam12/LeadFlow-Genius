@@ -295,6 +295,16 @@ const CRMPage = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Lead Modal */}
+      {editingLead && (
+        <EditLeadModal
+          lead={editingLead}
+          isOpen={!!editingLead}
+          onClose={() => setEditingLead(null)}
+          onUpdate={fetchLeads}
+        />
+      )}
     </div>
   );
 };
