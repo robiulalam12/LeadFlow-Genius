@@ -15,8 +15,11 @@ const Dashboard = () => {
     open_rate: 0,
     reply_rate: 0,
     leads_by_date: [],
+    leads_by_source: [],
     recent_campaigns: [],
   });
+
+  const COLORS = ['#FF4500', '#FFC300', '#8B5CF6', '#3B82F6', '#10B981'];
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
