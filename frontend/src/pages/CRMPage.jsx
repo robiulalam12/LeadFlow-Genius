@@ -28,6 +28,7 @@ const CRMPage = () => {
     source: '',
   });
   const [page, setPage] = useState(0);
+  const [editingLead, setEditingLead] = useState(null);
   const limit = 20;
 
   useEffect(() => {
