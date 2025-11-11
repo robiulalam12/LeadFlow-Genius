@@ -559,6 +559,12 @@ async def get_dashboard_analytics(current_user: dict = Depends(get_current_user)
     # Recent activity
     recent_campaigns = await db.campaigns.find({"user_id": user_id}, {"_id": 0}).sort("created_at", -1).limit(5).to_list(5)
     
+    # Get leads by source for pie chart
+    leads_by_source = {}
+    for lead in all_leads:
+        source = lead.get('source', 'Unknown')
+        leads_by_source[source] = leads_by_source.get(source, 0) + 1
+    
     return {
         "total_leads": total_leads,
         "active_campaigns": total_campaigns,
@@ -566,6 +572,7 @@ async def get_dashboard_analytics(current_user: dict = Depends(get_current_user)
         "open_rate": round(open_rate, 1),
         "reply_rate": round(reply_rate, 1),
         "leads_by_date": [{'date': k, 'count': v} for k, v in leads_by_date.items()],
+        "leads_by_source": [{'name': k, 'value': v} for k, v in leads_by_source.items()],
         "recent_campaigns": recent_campaigns
     }
 
