@@ -156,7 +156,7 @@ const EmailCampaigns = () => {
                 <Label htmlFor="body">Email Body</Label>
                 <Textarea
                   id="body"
-                  placeholder="Hi {{business_name}}...\n\nYour email content here..."
+                  placeholder="Hi {'{'}{'{'}}business_name{'}'}{'}'}}...&#10;&#10;Your email content here..."
                   rows={6}
                   className="rounded-xl mt-1"
                   value={formData.body}
@@ -164,7 +164,7 @@ const EmailCampaigns = () => {
                   required
                   data-testid="campaign-body-input"
                 />
-                <p className="text-xs text-gray-500 mt-1">Use {{business_name}} for personalization</p>
+                <p className="text-xs text-gray-500 mt-1">Use {'{'}{'{'}}business_name{'}'}{'}'}  for personalization</p>
               </div>
 
               <div>
