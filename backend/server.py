@@ -1,5 +1,7 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Request
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -31,6 +33,8 @@ JWT_EXPIRATION_DAYS = 30
 
 # Security
 security = HTTPBearer()
+start_time = datetime.now(timezone.utc)
+VERSION = "v1.0"
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -573,11 +577,34 @@ async def get_dashboard_analytics(current_user: dict = Depends(get_current_user)
         "reply_rate": round(reply_rate, 1),
         "leads_by_date": [{'date': k, 'count': v} for k, v in leads_by_date.items()],
         "leads_by_source": [{'name': k, 'value': v} for k, v in leads_by_source.items()],
-        "recent_campaigns": recent_campaigns
-    }
+"recent_campaigns": recent_campaigns
+  }
 
 # Include router
+
+    # Global error handlers
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"success": False, "message": exc.detail, "data": None},
+    )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    logging.error(f"Unhandled exception: {str(exc)}")
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "message": "Internal server error", "data": None},
+    )
+
+# Health check endpoint
+@api_router.get("/health")
+async def health():
+    uptime = (datetime.now(timezone.utc) - start_time).total_seconds()
+    return {"status": "ok", "uptime": uptime, "version": VERSION}
 app.include_router(api_router)
+
 
 app.add_middleware(
     CORSMiddleware,
