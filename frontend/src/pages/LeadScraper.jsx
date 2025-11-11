@@ -159,6 +159,30 @@ const LeadScraper = () => {
               </div>
             </div>
 
+            <div>
+              <Label className="mb-2 block">Data Sources</Label>
+              <div className="flex flex-wrap gap-4">
+                {availableSources.map((source) => (
+                  <div key={source} className="flex items-center gap-2">
+                    <Checkbox
+                      id={source}
+                      checked={formData.data_sources.includes(source)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setFormData({ ...formData, data_sources: [...formData.data_sources, source] });
+                        } else {
+                          setFormData({ ...formData, data_sources: formData.data_sources.filter((s) => s !== source) });
+                        }
+                      }}
+                    />
+                    <Label htmlFor={source} className="font-normal cursor-pointer">
+                      {source}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="flex flex-wrap gap-6">
               <div className="flex items-center gap-2">
                 <Checkbox
