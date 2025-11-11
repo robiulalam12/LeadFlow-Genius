@@ -1,0 +1,13 @@
+{
+  // Proxy API requests from the frontend to the backend. Replace
+  // `https://backend.example.com` with your deployed backend URL.
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://backend.example.com/api/$1"
+    }
+  ],
+  // Build the React app using the configured script and output to the build directory
+  "buildCommand": "npm run build --prefix frontend",
+  "outputDirectory": "frontend/build"
+}
