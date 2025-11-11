@@ -354,6 +354,27 @@ async def bulk_delete_leads(lead_ids: List[str], current_user: dict = Depends(ge
     result = await db.leads.delete_many({"id": {"$in": lead_ids}, "user_id": current_user['user_id']})
     return {"deleted_count": result.deleted_count}
 
+@api_router.post("/leads/{lead_id}/notes")
+async def add_lead_note(lead_id: str, note: dict, current_user: dict = Depends(get_current_user)):
+    result = await db.leads.update_one(
+        {"id": lead_id, "user_id": current_user['user_id']},
+        {"$set": {"notes": note.get('text'), "last_activity": datetime.now(timezone.utc).isoformat()}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"message": "Note added successfully"}
+
+@api_router.post("/leads/{lead_id}/tags")
+async def add_lead_tags(lead_id: str, tags_data: dict, current_user: dict = Depends(get_current_user)):
+    tags = tags_data.get('tags', [])
+    result = await db.leads.update_one(
+        {"id": lead_id, "user_id": current_user['user_id']},
+        {"$set": {"tags": tags, "last_activity": datetime.now(timezone.utc).isoformat()}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"message": "Tags updated successfully"}
+
 # ============= CAMPAIGNS ROUTES =============
 @api_router.post("/campaigns")
 async def create_campaign(request: CreateCampaignRequest, current_user: dict = Depends(get_current_user)):
