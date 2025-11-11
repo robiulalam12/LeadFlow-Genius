@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "tests_run": 13,
+    "tests_passed": 13,
+    "success_rate": 100.0,
+    "timestamp": "2025-11-11T14:27:50.701791"
+  },
+  "results": [
+    {
+      "test": "Login with valid credentials",
+      "success": true,
+      "details": "Token received: eyJhbGciOiJIUzI1NiIs...",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:45.243603"
+    },
+    {
+      "test": "Login with invalid credentials (should fail)",
+      "success": true,
+      "details": "",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:45.283719"
+    },
+    {
+      "test": "Start scraping job",
+      "success": true,
+      "details": "Job ID: b8979651-ffec-47f3-bccb-a2c812ed4868",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:45.320063"
+    },
+    {
+      "test": "Get scraper job status",
+      "success": true,
+      "details": "Status: running, Progress: 25%",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.356604"
+    },
+    {
+      "test": "Get scraper jobs list",
+      "success": true,
+      "details": "Found 2 jobs",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.396292"
+    },
+    {
+      "test": "Get leads list",
+      "success": true,
+      "details": "Found 10 leads (total: 101)",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.432750"
+    },
+    {
+      "test": "Filter leads by status",
+      "success": true,
+      "details": "",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.473061"
+    },
+    {
+      "test": "Search leads",
+      "success": true,
+      "details": "",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.509973"
+    },
+    {
+      "test": "Update lead status",
+      "success": true,
+      "details": "Updated lead e53b2134-4c15-4451-b6bf-dbaf3df2eb00",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.552937"
+    },
+    {
+      "test": "Create email campaign",
+      "success": true,
+      "details": "Campaign ID: 2c4e2eb5-ab6d-4a34-9916-971b8b70369f",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.642095"
+    },
+    {
+      "test": "Get campaigns list",
+      "success": true,
+      "details": "Found 1 campaigns",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:47.675045"
+    },
+    {
+      "test": "AI follow-up generation",
+      "success": true,
+      "details": "Generated email with subject: 'Friendly Reminder - Your Bright Smile Awaits!...'",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:50.644339"
+    },
+    {
+      "test": "Get dashboard analytics",
+      "success": true,
+      "details": "Total leads: 105, Campaigns: 1",
+      "error": "",
+      "timestamp": "2025-11-11T14:27:50.700824"
+    }
+  ]
+}
