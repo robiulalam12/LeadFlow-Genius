@@ -126,6 +126,7 @@ class StartScraperRequest(BaseModel):
     has_website: Optional[bool] = None
     has_email: Optional[bool] = None
     min_reviews: Optional[int] = None
+    data_sources: List[str] = ["Google Maps"]  # Google Maps, Yelp, Facebook Pages, Trustpilot
 
 class AIGenerateRequest(BaseModel):
     lead_name: str
