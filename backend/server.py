@@ -35,6 +35,14 @@ JWT_EXPIRATION_DAYS = 30
 security = HTTPBearer()
 start_time = datetime.now(timezone.utc)
 VERSION = "v1.0"
+# Analytics caching
+ANALYTICS_CACHE_TTL = 60  # cache TTL in seconds
+analytics_cache = {
+    "summary": {"data": None, "timestamp": 0},
+    "sources": {"data": None, "timestamp": 0},
+    "engagement": {"data": None, "timestamp": 0},
+}
+
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -582,7 +590,70 @@ async def get_dashboard_analytics(current_user: dict = Depends(get_current_user)
 
 # Include router
 
-    # Global error handlers
+  
+@api_router.get("/analytics/summary")
+async def get_analytics_summary(current_user: dict = Depends(get_current_user)):
+    user_id = current_user['user_id']
+    now_ts = datetime.now(timezone.utc).timestamp()
+    cache = analytics_cache["summary"]
+    if cache["data"] is not None and now_ts - cache["timestamp"] < ANALYTICS_CACHE_TTL:
+        return cache["data"]
+    total_leads = await db.leads.count_documents({"user_id": user_id})
+    campaigns = await db.campaigns.find({"user_id": user_id}, {"_id": 0}).to_list(1000)
+    total_emails_sent = sum(c.get("sent_count", 0) for c in campaigns)
+    total_opens = sum(c.get("opened_count", 0) for c in campaigns)
+    total_replies = sum(c.get("replied_count", 0) for c in campaigns)
+    open_rate = (total_opens / total_emails_sent * 100) if total_emails_sent > 0 else 0
+    reply_rate = (total_replies / total_emails_sent * 100) if total_emails_sent > 0 else 0
+    data = {
+        "total_leads": total_leads,
+        "total_campaigns": len(campaigns),
+        "open_rate": round(open_rate, 1),
+        "reply_rate": round(reply_rate, 1)
+    }
+    analytics_cache["summary"] = {"data": data, "timestamp": now_ts}
+    return data
+
+@api_router.get("/analytics/sources")
+async def get_analytics_sources(current_user: dict = Depends(get_current_user)):
+    user_id = current_user['user_id']
+    now_ts = datetime.now(timezone.utc).timestamp()
+    cache = analytics_cache["sources"]
+    if cache["data"] is not None and now_ts - cache["timestamp"] < ANALYTICS_CACHE_TTL:
+        return cache["data"]
+    all_leads = await db.leads.find({"user_id": user_id}, {"_id": 0, "source": 1}).to_list(10000)
+    leads_by_source = {}
+    for lead in all_leads:
+        source = lead.get('source', 'Unknown')
+        leads_by_source[source] = leads_by_source.get(source, 0) + 1
+    data = {
+        "leads_by_source": [{"name": k, "value": v} for k, v in leads_by_source.items()]
+    }
+    analytics_cache["sources"] = {"data": data, "timestamp": now_ts}
+    return data
+
+@api_router.get("/analytics/engagement")
+async def get_analytics_engagement(current_user: dict = Depends(get_current_user)):
+    user_id = current_user['user_id']
+    now_ts = datetime.now(timezone.utc).timestamp()
+    cache = analytics_cache["engagement"]
+    if cache["data"] is not None and now_ts - cache["timestamp"] < ANALYTICS_CACHE_TTL:
+        return cache["data"]
+    campaigns = await db.campaigns.find({"user_id": user_id}, {"_id": 0}).to_list(1000)
+    total_emails_sent = sum(c.get("sent_count", 0) for c in campaigns)
+    total_opens = sum(c.get("opened_count", 0) for c in campaigns)
+    total_replies = sum(c.get("replied_count", 0) for c in campaigns)
+    open_rate = (total_opens / total_emails_sent * 100) if total_emails_sent > 0 else 0
+    reply_rate = (total_replies / total_emails_sent * 100) if total_emails_sent > 0 else 0
+    data = {
+        "emails_sent": total_emails_sent,
+        "open_rate": round(open_rate, 1),
+        "reply_rate": round(reply_rate, 1)
+    }
+    analytics_cache["engagement"] = {"data": data, "timestamp": now_ts}
+    return data
+
+  # Global error handlers
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
