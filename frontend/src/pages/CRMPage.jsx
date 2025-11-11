@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Users, Search, Filter, Trash2, Mail, Edit, Tag } from 'lucide-react';
+import { Users, Search, Filter, Trash2, Mail, Edit, Tag, Plus } from 'lucide-react';
+import EditLeadModal from '@/components/EditLeadModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
