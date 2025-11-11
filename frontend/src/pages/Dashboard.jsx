@@ -28,45 +28,53 @@ const Dashboard = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await axios.get(`${API}/analytics/dashboard`);
-      setAnalytics(response.data);
-    } catch (error) {
-      toast.error('Failed to load analytics');
+  //     const [summaryRes, sourcesRes, engagementRes, dashRes] = await Promise.all([
+        axios.get(`${API}/analytics/summary`),
+        axios.get(`${API}/analytics/sources`),
+        axios.get(`${API}/analytics/engagement`),
+        axios.get(`${API}/analytics/dashboard`)
+      ]);
+      setAnalytics({
+        total_leads: summaryRes.data.total_leads,
+        total_campaigns: summaryRes.data.total_campaigns,
+        emails_sent: engagementRes.data.emails_sent,
+        open_rate: engagementRes.data.open_rate,
+        reply_rate: engagementRes.data.reply_rate,
+        leads_by_date: dashRes.data.leads_by_date,
+        leads_by_source: sourcesRes.data.leads_by_source,
+        recent_campaigns: dashRes.data.recent_campaigns || []
+      });
+
+  //     toast.error('Failed to load analytics');
     } finally {
       setLoading(false);
     }
   };
 
   const stats = [
-    {
-      title: 'Total Leads',
-      value: analytics.total_leads.toLocaleString(),
-      icon: Users,
-      color: 'from-blue-500 to-cyan-500',
-      change: '+12%',
-    },
-    {
-      title: 'Active Campaigns',
-      value: analytics.active_campaigns,
-      icon: Activity,
-      color: 'from-purple-500 to-pink-500',
-      change: '+8%',
-    },
-    {
-      title: 'Emails Sent',
-      value: analytics.emails_sent.toLocaleString(),
-      icon: Mail,
-      color: 'from-orange-500 to-yellow-500',
-      change: '+23%',
-    },
-    {
-      title: 'Open Rate',
-      value: `${analytics.open_rate}%`,
-      icon: TrendingUp,
-      color: 'from-green-500 to-emerald-500',
-      change: '+5%',
-    },
-  ];
+  {
+    title: 'Total Leads',
+    value: analytics.total_leads.toLocaleString(),
+    icon: Users,
+    color: 'from-blue-500 to-cyan-500',
+    change: '',
+  },
+  {
+    title: 'Open Rate',
+    value: `${analytics.open_rate}%`,
+    icon: TrendingUp,
+    color: 'from-green-500 to-emerald-500',
+    change: '',
+  },
+  {
+    title: 'Reply Rate',
+    value: `${analytics.reply_rate}%`,
+    icon: Activity,
+    color: 'from-purple-500 to-pink-500',
+    change: '',
+  },
+];
+ 
 
   const emailEngagementData = [
     { name: 'Sent', value: analytics.emails_sent },
