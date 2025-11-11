@@ -237,7 +237,13 @@ const CRMPage = () => {
                       <td className="py-3 px-4 text-sm text-gray-600">{lead.source}</td>
                       <td className="py-3 px-4">
                         <div className="flex gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => setEditingLead(lead)}
+                            data-testid={`edit-lead-${lead.id}`}
+                          >
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button
