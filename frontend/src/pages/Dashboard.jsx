@@ -31,25 +31,50 @@ const Dashboard = () => {
   //     const [summaryRes, sourcesRes, engagementRes, dashRes] = await Promise.all([
         axios.get(`${API}/analytics/summary`),
         axios.get(`${API}/analytics/sources`),
-        axios.get(`${API}/analytics/engagement`),
-        axios.get(`${API}/analytics/dashboard`)
-      ]);
-      setAnalytics({
-        total_leads: summaryRes.data.total_leads,
-        total_campaigns: summaryRes.data.total_campaigns,
-        emails_sent: engagementRes.data.emails_sent,
-        open_rate: engagementRes.data.open_rate,
-        reply_rate: engagementRes.data.reply_rate,
-        leads_by_date: dashRes.data.leads_by_date,
-        leads_by_source: sourcesRes.data.leads_by_source,
-        recent_campaigns: dashRes.data.recent_campaigns || []
-      });
+   
+              const [summaryRes, sourcesRes, engagementRes, dashRes] = await Promise.all([
+      axios.get(`${API}/analytics/summary`),
+      axios.get(`${API}/analytics/sources`),
+      axios.get(`${API}/analytics/engagement`),
+      axios.get(`${API}/analytics/dashboard`),
+    ]);
+    setAnalytics({
+      total_leads: summaryRes.data.total_leads,
+      total_campaigns: summaryRes.data.total_campaigns,
+      emails_sent: engagementRes.data.emails_sent,
+      open_rate: engagementRes.data.open_rate,
+      reply_rate: engagementRes.data.reply_rate,
+      leads_by_date: dashRes.data.leads_by_date,
+      leads_by_source: sourcesRes.data.leads_by_source,
+      recent_campaigns: dashRes.data.recent_campaigns || [],
+    });
+    return;
+const fetchAnalytics = async () => {
+  try {
+    const [summaryRes, sourcesRes, engagementRes, dashRes] = await Promise.all([
+      axios.get(`${API}/analytics/summary`),
+      axios.get(`${API}/analytics/sources`),
+      axios.get(`${API}/analytics/engagement`),
+      axios.get(`${API}/analytics/dashboard`),
+    ]);
+    setAnalytics({
+      total_leads: summaryRes.data.total_leads,
+      total_campaigns: summaryRes.data.total_campaigns,
+      emails_sent: engagementRes.data.emails_sent,
+      open_rate: engagementRes.data.open_rate,
+      reply_rate: engagementRes.data.reply_rate,
+      leads_by_date: dashRes.data.leads_by_date,
+      leads_by_source: sourcesRes.data.leads_by_source,
+      recent_campaigns: dashRes.data.recent_campaigns || [],
+    });
+  } catch (error) {
+    // Uncomment this if you want to show an error toast
+    // toast.error('Failed to load analytics');
+  } finally {
+    setLoading(false);
+  }
+};
 
-  //     toast.error('Failed to load analytics');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const stats = [
   {
